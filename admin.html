@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VIZARD — Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-black px-3">
+    <h1 class="logo m-0">VIZARD ⚡ — Admin</h1>
+    <a href="index.html" class="btn btn-outline-light">Home</a>
+  </nav>
+
+  <div class="container my-4">
+    <h3>Add / Edit Product</h3>
+    <form id="productForm" class="bg-dark p-3 rounded">
+      <input type="hidden" id="prodId">
+      <div class="mb-2"><input id="prodName" class="form-control" placeholder="Product name" required></div>
+      <div class="mb-2"><input id="prodPrice" class="form-control" type="number" placeholder="Price" required></div>
+      <div class="mb-2">
+        <select id="prodCategory" class="form-select">
+          <option>Mobiles</option>
+          <option>Electronics</option>
+          <option>Clothing</option>
+          <option>Accessories</option>
+        </select>
+      </div>
+      <div class="mb-2"><textarea id="prodDesc" class="form-control" placeholder="Description"></textarea></div>
+      <div class="mb-2">
+        <label class="form-label">Product image (upload)</label>
+        <input id="prodImage" type="file" accept="image/*" class="form-control">
+        <small class="text-muted">Image will be stored in browser (base64). For production use external storage.</small>
+      </div>
+      <button class="btn btn-danger" id="saveBtn">Save Product</button>
+      <button type="button" id="cancelEdit" class="btn btn-outline-light ms-2" style="display:none;">Cancel</button>
+    </form>
+
+    <hr class="my-4">
+
+    <h4>Existing Products</h4>
+    <div id="productsTable"></div>
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>
