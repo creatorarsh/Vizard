@@ -1,0 +1,55 @@
+/* style.css - VIZARD dark theme */
+:root{
+  --bg:#000;
+  --card:#0f0f0f;
+
+  --accent:#b30000;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: 'Poppins', system-ui, -apple-system, Arial, sans-serif;
+  background:var(--bg);
+  color:#fff;
+}
+.logo{
+  font-family: 'Orbitron', sans-serif;
+  font-size:1.4rem;
+  color:var(--accent);
+  text-shadow:0 0 14px rgba(255,0,85);
+}
+.search-bar{
+  max-width:520px;
+  background:#111;
+  border:1px solid #222;
+  color:#ffff;
+}
+.category-btn{ margin:0 4px; }
+.card {
+  background: linear-gradient(180deg, rgba(0,0,0), rgba(0,0,0));
+  border:1px solid rgba(255,255,255,);
+  transition: transform .18s, box-shadow .18s;
+}
+.card:hover{ transform: translateY(-4px); box-shadow: 0 8px 30px rgba(255,255,255); }
+.card .card-body h5{ font-size:1rem; margin-bottom:6px; }
+.card img{ object-fit:contain; background:#ffff; padding:10px; border-radius:8px; }
+.btn-danger{ background:var(--accent); border:none; }
+.container{ max-width:1200px; }
+@media (max-width:576px){
+  .logo{ font-size:1.1rem; }
+  .search-bar{ max-width:160px; }
+
+ .product-name {
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.product-price {
+  color: #ccc !important;
+  font-weight: 500;
+}
+
+
+
+
+
