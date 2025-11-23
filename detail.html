@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details ⚡ VIZARD</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Premium Theme -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, var(--primary-bg) 0%, #1a0030 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .detail-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .detail-img {
+      width: 100%;
+      height: 300px;
+      object-fit: contain;
+      background: linear-gradient(135deg, #150013 0%, #1a0018 100%);
+      border-radius: 15px;
+      padding: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .detail-box {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 20px;
+    }
+
+    .btn-detail-cart {
+      background: rgba(38, 211, 255, 0.2);
+      border: 1px solid var(--accent-secondary);
+      border-radius: 12px;
+      padding: 15px;
+      font-weight: 600;
+      color: var(--accent-secondary);
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .btn-detail-cart:hover {
+      background: var(--accent-secondary);
+      color: black;
+      transform: translateY(-2px);
+    }
+
+    .btn-detail-buy {
+      background: linear-gradient(135deg, var(--accent) 0%, #ff4da6 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 15px;
+      font-weight: 600;
+      color: white;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .btn-detail-buy:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(255, 45, 149, 0.5);
+    }
+
+    .related-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 15px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .related-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 25px rgba(255, 45, 149, 0.3);
+    }
+
+    .related-card img {
+      height: 120px;
+      width: 100%;
+      object-fit: contain;
+      background: #150013;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .detail-img {
+        height: 250px;
+      }
+      
+      .btn-detail-cart, .btn-detail-buy {
+        padding: 12px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="detail-container">
+
+    <a href="index.html" class="btn btn-premium mb-4">← Back to Store</a>
+
+    <div class="row g-4">
+
+      <!-- PRODUCT IMAGE -->
+      <div class="col-md-6 text-center">
+        <img id="detailImg" class="detail-img" src="" alt="Product Image">
+      </div>
+
+      <!-- PRODUCT DETAILS -->
+      <div class="col-md-6">
+        <div class="detail-box">
+          <h1 id="detailName" class="text-light mb-3"></h1>
+          
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <h2 class="text-success mb-0">₹<span id="detailPrice"></span></h2>
+            <span class="badge bg-primary">⭐ 4.5</span>
+          </div>
+
+          <p id="detailDesc" class="text-light mb-4"></p>
+
+          <div class="row g-3">
+            <div class="col-6">
+              <button class="btn-detail-cart" onclick="addToCartFromDetail()">
+                🛒 Add to Cart
+              </button>
+            </div>
+            <div class="col-6">
+              <button class="btn-detail-buy" onclick="buyNowFromDetail()">
+                ⚡ Buy Now
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <h5 class="text-light mb-3">Product Features</h5>
+            <ul class="text-light">
+              <li>Premium Quality Material</li>
+              <li>Fast Delivery Available</li>
+              <li>1 Year Warranty</li>
+              <li>Easy Returns</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RELATED PRODUCTS -->
+    <h3 class="text-light mt-5 mb-3">Related Products</h3>
+    <div class="row g-3" id="relatedBox"></div>
+
+  </div>
+
+  <script>
+    // GET PRODUCT ID FROM URL OR LOCALSTORAGE
+    let productID = localStorage.getItem("viewProduct");
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+
+    // IF NO PRODUCT SELECTED, GO BACK HOME
+    if (productID === null || !products[productID]) {
+      // window.location.href = "index.html";
+      // Temporary: Show message
+      document.body.innerHTML = `
+        <div class="container text-center mt-5">
+          <div class="detail-box">
+            <h2 class="text-light">Product Not Found</h2>
+            <p class="text-secondary">The product you're looking for doesn't exist.</p>
+            <a href="index.html" class="btn btn-premium">Back to Home</a>
+          </div>
+        </div>
+      `;
+    } else {
+      // LOAD PRODUCT DETAILS
+      let product = products[productID];
+      
+      document.getElementById("detailImg").src = product.img;
+      document.getElementById("detailName").textContent = product.name;
+      document.getElementById("detailPrice").textContent = product.price.toLocaleString();
+      document.getElementById("detailDesc").textContent = product.desc;
+
+      // LOAD RELATED PRODUCTS
+      loadRelatedProducts(productID, product.category);
+    }
+
+    // ADD TO CART FROM DETAIL PAGE
+    function addToCartFromDetail() {
+      let product = products[productID];
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      let existing = cart.find(item => item.name === product.name);
+
+      if (existing) {
+        existing.qty = (existing.qty || 1) + 1;
+      } else {
+        let productCopy = {...product};
+        productCopy.qty = 1;
+        cart.push(productCopy);
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert("✅ Added to Cart!");
+    }
+
+    // BUY NOW FROM DETAIL PAGE
+    function buyNowFromDetail() {
+      let product = products[productID];
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      
+      let productCopy = {...product};
+      productCopy.qty = 1;
+      cart = [productCopy];
+      
+      localStorage.setItem("cart", JSON.stringify(cart));
+      localStorage.setItem("buyNow", "true");
+      window.location.href = "checkout.html";
+    }
+
+    // LOAD RELATED PRODUCTS
+    function loadRelatedProducts(currentID, category) {
+      let relatedBox = document.getElementById("relatedBox");
+      relatedBox.innerHTML = "";
+
+      products.forEach((p, i) => {
+        if (i != currentID && p.category === category) {
+          relatedBox.innerHTML += `
+            <div class="col-6 col-md-3">
+              <div class="related-card" onclick="viewRelatedProduct(${i})">
+                <img src="${p.img}" alt="${p.name}">
+                <h6 class="text-light mt-2">${p.name}</h6>
+                <p class="text-success">₹${p.price.toLocaleString()}</p>
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      // If no related products, show message
+      if (relatedBox.innerHTML === "") {
+        relatedBox.innerHTML = `
+          <div class="col-12 text-center">
+            <p class="text-secondary">No related products found</p>
+          </div>
+        `;
+      }
+    }
+
+    // VIEW RELATED PRODUCT
+    function viewRelatedProduct(id) {
+      localStorage.setItem("viewProduct", id);
+      window.location.reload();
+    }
+  </script>
+
+</body>
+</html>

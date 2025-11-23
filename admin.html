@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VIZARD Admin ⚡ Secure Panel</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Premium Theme -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, var(--primary-bg) 0%, #1a0030 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* SECURITY HEADER */
+    .security-header {
+      background: rgba(255, 0, 0, 0.1);
+      border: 1px solid rgba(255, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 10px 15px;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .admin-card-premium {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .admin-card-premium:hover {
+      transform: translateY(-5px);
+      box-shadow: 
+        0 25px 50px rgba(255, 45, 149, 0.3),
+        0 0 60px rgba(255, 45, 149, 0.2);
+      border-color: var(--accent);
+    }
+
+    .premium-input {
+      background: rgba(255, 255, 255, 0.07) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-radius: 12px !important;
+      color: white !important;
+      padding: 15px 20px !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .premium-input:focus {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-color: var(--accent) !important;
+      box-shadow: 0 0 0 3px rgba(255, 45, 149, 0.2), 
+                  0 0 30px rgba(255, 45, 149, 0.3) !important;
+      transform: scale(1.02);
+    }
+
+    .image-preview-premium {
+      height: 180px;
+      width: 180px;
+      object-fit: contain;
+      background: linear-gradient(135deg, #150013 0%, #1a0018 100%);
+      border-radius: 15px;
+      border: 2px dashed var(--accent);
+      box-shadow: 0 0 25px rgba(255, 45, 149, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .image-preview-premium:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px rgba(255, 45, 149, 0.6);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 25px rgba(255, 45, 149, 0.3);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .btn-admin-primary {
+      background: linear-gradient(135deg, var(--accent) 0%, #ff4da6 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 12px 25px;
+      font-weight: 600;
+      color: white;
+      transition: all 0.3s ease;
+    }
+
+    .btn-admin-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(255, 45, 149, 0.5);
+    }
+
+    .btn-admin-secondary {
+      background: rgba(38, 211, 255, 0.2);
+      border: 1px solid var(--accent-secondary);
+      border-radius: 12px;
+      padding: 12px 25px;
+      font-weight: 600;
+      color: var(--accent-secondary);
+      transition: all 0.3s ease;
+    }
+
+    .btn-admin-secondary:hover {
+      background: var(--accent-secondary);
+      color: black;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(38, 211, 255, 0.5);
+    }
+
+    .product-grid-admin {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .session-timer {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 0, 0, 0.2);
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-size: 14px;
+      border: 1px solid rgba(255, 0, 0, 0.4);
+    }
+  </style>
+</head>
+
+<body onload="checkAdminSession()">
+
+  <!-- SESSION TIMER -->
+  <div class="session-timer" id="sessionTimer">
+    ⏰ Session: <span id="sessionTime">30:00</span>
+  </div>
+
+  <div class="admin-container">
+
+    <!-- SECURITY HEADER -->
+    <div class="security-header">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <span class="text-warning">🔒 SECURE ADMIN PANEL</span>
+          <small class="text-light ms-2">Logged in as: Admin</small>
+        </div>
+        <div>
+          <span class="text-light" id="currentTime"></span>
+          <button class="btn btn-sm btn-outline-warning ms-3" onclick="logoutAdmin()">Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="logo-premium m-0">Admin Dashboard ⚡</h1>
+        <p class="text-secondary m-0">Manage your store efficiently</p>
+      </div>
+      <a href="index.html" class="btn-admin-primary">← Back to Store</a>
+    </div>
+
+    <!-- STATS GRID -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number" id="totalProducts">0</div>
+        <div class="text-light">Total Products</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="totalOrders">0</div>
+        <div class="text-light">Total Orders</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="totalRevenue">₹0</div>
+        <div class="text-light">Total Revenue</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="lowStock">0</div>
+        <div class="text-light">Low Stock</div>
+      </div>
+    </div>
+
+    <!-- PRODUCT FORM -->
+    <div class="admin-card-premium">
+      <h3 class="mb-4 text-gradient" id="formTitle">🎯 Add New Product</h3>
+
+      <div class="row g-4">
+        <div class="col-md-6">
+          <input id="pname" class="form-control premium-input mb-3" placeholder="📦 Product Name">
+
+          <input id="pprice" type="number" class="form-control premium-input mb-3" placeholder="💰 Price">
+
+          <select id="pcategory" class="form-control premium-input mb-3">
+            <option value="">📁 Select Category</option>
+            <option value="Mobiles">📱 Mobiles</option>
+            <option value="Electronics">💻 Electronics</option>
+            <option value="Clothing">👕 Clothing</option>
+            <option value="Accessories">🎧 Accessories</option>
+          </select>
+
+          <textarea id="pdesc" rows="3" class="form-control premium-input mb-3" placeholder="📝 Product Description"></textarea>
+
+          <div class="mb-3">
+            <label class="text-light mb-2">🖼️ Product Image</label>
+            <input id="pimg" type="file" class="form-control premium-input" accept="image/*" onchange="previewImagePremium()">
+          </div>
+
+        </div>
+
+        <div class="col-md-6 text-center">
+          <img id="preview" class="image-preview-premium mb-3">
+          <p class="text-light">Image Preview</p>
+          <div class="d-grid gap-2">
+            <button class="btn-admin-primary" onclick="saveProductPremium()" id="saveBtn">
+              ➕ Add Product
+            </button>
+            <button class="btn-admin-secondary" onclick="clearForm()">
+              🗑️ Clear Form
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTS LIST -->
+    <div class="admin-card-premium">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-gradient m-0">📦 Product Inventory</h3>
+        <div class="text-light">
+          <span id="productCount">0</span> products
+        </div>
+      </div>
+
+      <div class="product-grid-admin" id="adminProductList"></div>
+    </div>
+
+  </div>
+
+  <script>
+    let editID = null;
+    let sessionTimer;
+
+    // SECURITY: Check admin session
+    function checkAdminSession() {
+      const loggedIn = localStorage.getItem('adminLogged');
+      const sessionStart = localStorage.getItem('adminSessionStart');
+      
+      if (!loggedIn || !sessionStart) {
+        window.location.href = 'admin-login.html';
+        return;
+      }
+
+      // Check if session expired (2 hours)
+      const sessionTime = Date.now() - parseInt(sessionStart);
+      if (sessionTime > 2 * 60 * 60 * 1000) {
+        logoutAdmin();
+        return;
+      }
+
+      startSessionTimer();
+      loadDashboardStats();
+      loadProductsPremium();
+      updateCurrentTime();
+      setInterval(updateCurrentTime, 60000);
+    }
+
+    function startSessionTimer() {
+      const sessionStart = parseInt(localStorage.getItem('adminSessionStart'));
+      const sessionDuration = 2 * 60 * 60 * 1000; // 2 hours
+      
+      function updateTimer() {
+        const now = Date.now();
+        const elapsed = now - sessionStart;
+        const remaining = sessionDuration - elapsed;
+        
+        if (remaining <= 0) {
+          logoutAdmin();
+          return;
+        }
+        
+        const minutes = Math.floor(remaining / 60000);
+        const seconds = Math.floor((remaining % 60000) / 1000);
+        document.getElementById('sessionTime').textContent = 
+          `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }
+      
+      updateTimer();
+      sessionTimer = setInterval(updateTimer, 1000);
+    }
+
+    function updateCurrentTime() {
+      document.getElementById('currentTime').textContent = 
+        new Date().toLocaleTimeString();
+    }
+
+    function logoutAdmin() {
+      clearInterval(sessionTimer);
+      localStorage.removeItem('adminLogged');
+      localStorage.removeItem('adminSessionStart');
+      window.location.href = 'admin-login.html';
+    }
+
+    // ENHANCED PRODUCT MANAGEMENT
+    function loadDashboardStats() {
+      const products = JSON.parse(localStorage.getItem('products')) || [];
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      
+      let totalRevenue = 0;
+      orders.forEach(order => {
+        order.items.forEach(item => {
+          totalRevenue += item.price * (item.qty || 1);
+        });
+      });
+
+      document.getElementById('totalProducts').textContent = products.length;
+      document.getElementById('totalOrders').textContent = orders.length;
+      document.getElementById('totalRevenue').textContent = '₹' + totalRevenue;
+      document.getElementById('lowStock').textContent = '0'; // You can implement stock management
+    }
+
+    function previewImagePremium() {
+      let file = document.getElementById("pimg").files[0];
+      if (!file) return;
+      
+      let reader = new FileReader();
+      reader.onload = () => {
+        let img = document.getElementById("preview");
+        img.src = reader.result;
+        img.style.display = "block";
+        
+        // Add animation
+        img.style.animation = 'popIn 0.5s ease-out';
+        setTimeout(() => {
+          img.style.animation = '';
+        }, 500);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function loadProductsPremium() {
+      let products = JSON.parse(localStorage.getItem("products")) || [];
+      let box = document.getElementById("adminProductList");
+      box.innerHTML = "";
+
+      document.getElementById('productCount').textContent = products.length;
+
+      if (products.length === 0) {
+        box.innerHTML = `
+          <div class="col-12 text-center py-5">
+            <h4 class="text-light">No products yet</h4>
+            <p class="text-secondary">Add your first product to get started</p>
+          </div>
+        `;
+        return;
+      }
+
+      products.forEach((p, i) => {
+        box.innerHTML += `
+          <div class="product-card-premium">
+            <img src="${p.img}" style="height:120px;width:100%;object-fit:contain;border-radius:12px;background:#150013;margin-bottom:12px;">
+            <h6 class="text-light">${p.name}</h6>
+            <p class="text-success fw-bold">₹${p.price}</p>
+            <p class="text-secondary small">${p.category}</p>
+            
+            <div class="d-flex gap-2 mt-3">
+              <button onclick="editProductPremium(${i})" class="btn-admin-secondary flex-fill">✏️ Edit</button>
+              <button onclick="deleteProductPremium(${i})" class="btn btn-sm btn-outline-danger">🗑️</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function saveProductPremium() {
+      let name = pname.value.trim();
+      let price = pprice.value;
+      let category = pcategory.value;
+      let desc = pdesc.value.trim();
+      let imgSrc = document.getElementById("preview").src;
+
+      if (!name || !price || !category || !desc || imgSrc === "") {
+        showNotification("Please fill all fields!", "error");
+        return;
+      }
+
+      let products = JSON.parse(localStorage.getItem("products")) || [];
+
+      if (editID !== null) {
+        products[editID] = { name, price, category, desc, img: imgSrc };
+        showNotification("Product updated successfully!", "success");
+        editID = null;
+        saveBtn.textContent = "➕ Add Product";
+        formTitle.textContent = "🎯 Add New Product";
+      } else {
+        products.push({ name, price, category, desc, img: imgSrc });
+        showNotification("Product added successfully!", "success");
+      }
+
+      localStorage.setItem("products", JSON.stringify(products));
+      clearForm();
+      loadProductsPremium();
+      loadDashboardStats();
+    }
+
+    function editProductPremium(i) {
+      let products = JSON.parse(localStorage.getItem("products")) || [];
+      let p = products[i];
+
+      pname.value = p.name;
+      pprice.value = p.price;
+      pcategory.value = p.category;
+      pdesc.value = p.desc;
+
+      preview.src = p.img;
+      preview.style.display = "block";
+
+      editID = i;
+      saveBtn.textContent = "💾 Update Product";
+      formTitle.textContent = "✏️ Edit Product";
+
+      // Scroll to form
+      document.querySelector('.admin-card-premium').scrollIntoView({ 
+        behavior: 'smooth' 
+      });
+    }
+
+    function deleteProductPremium(i) {
+      if (!confirm("Are you sure you want to delete this product?")) return;
+      
+      let products = JSON.parse(localStorage.getItem("products")) || [];
+      products.splice(i, 1);
+      localStorage.setItem("products", JSON.stringify(products));
+      
+      showNotification("Product deleted successfully!", "success");
+      loadProductsPremium();
+      loadDashboardStats();
+    }
+
+    function clearForm() {
+      pname.value = "";
+      pprice.value = "";
+      pcategory.value = "";
+      pdesc.value = "";
+      preview.style.display = "none";
+      pimg.value = "";
+      editID = null;
+      saveBtn.textContent = "➕ Add Product";
+      formTitle.textContent = "🎯 Add New Product";
+    }
+
+    function showNotification(message, type) {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'} position-fixed`;
+      notification.style.cssText = `
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 300px;
+        animation: slideInRight 0.3s ease-out;
+      `;
+      notification.textContent = message;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    }
+
+    // CSS for animations
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes popIn {
+        0% { transform: scale(0.8); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+      }
+      
+      @keyframes slideInRight {
+        0% { transform: translateX(100%); opacity: 0; }
+        100% { transform: translateX(0); opacity: 1; }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+
+</body>
+</html>

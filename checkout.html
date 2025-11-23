@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Checkout 🔒 VIZARD Premium</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Premium Theme -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, var(--primary-bg) 0%, #1a0030 100%);
+      min-height: 100vh;
+    }
+
+    .checkout-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .checkout-header-premium {
+      background: linear-gradient(135deg, rgba(255,45,149,0.1) 0%, rgba(38,211,255,0.1) 100%);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .checkout-card-premium {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 25px;
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .checkout-card-premium:hover {
+      border-color: var(--accent);
+      box-shadow: 
+        0 20px 45px rgba(255, 45, 149, 0.3),
+        0 0 60px rgba(255, 45, 149, 0.2);
+    }
+
+    .form-group-premium {
+      margin-bottom: 25px;
+    }
+
+    .form-label-premium {
+      color: var(--text-primary);
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-input-premium {
+      background: rgba(255, 255, 255, 0.07) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-radius: 12px !important;
+      color: white !important;
+      padding: 15px 20px !important;
+      transition: all 0.3s ease !important;
+      font-size: 16px;
+    }
+
+    .form-input-premium:focus {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-color: var(--accent) !important;
+      box-shadow: 0 0 0 3px rgba(255, 45, 149, 0.2), 
+                  0 0 30px rgba(255, 45, 149, 0.3) !important;
+      transform: scale(1.02);
+    }
+
+    .payment-method-premium {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .payment-method-premium:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+
+    .payment-method-premium.selected {
+      background: rgba(255, 45, 149, 0.1);
+      border-color: var(--accent);
+      box-shadow: 0 10px 25px rgba(255, 45, 149, 0.3);
+    }
+
+    .payment-icon {
+      font-size: 24px;
+      margin-right: 15px;
+    }
+
+    .order-summary-premium {
+      position: sticky;
+      top: 20px;
+    }
+
+    .order-item-premium {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .order-item-premium:last-child {
+      border-bottom: none;
+    }
+
+    .order-item-image {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      background: #150013;
+      border-radius: 10px;
+      padding: 5px;
+    }
+
+    .security-badge-checkout {
+      background: linear-gradient(135deg, var(--success) 0%, #00cc66 100%);
+      color: black;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    .place-order-btn-premium {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent) 0%, #ff4da6 100%);
+      border: none;
+      border-radius: 15px;
+      padding: 20px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .place-order-btn-premium::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .place-order-btn-premium:hover::before {
+      left: 100%;
+    }
+
+    .place-order-btn-premium:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 
+        0 25px 50px rgba(255, 45, 149, 0.6),
+        0 0 100px rgba(255, 45, 149, 0.4);
+    }
+
+    .progress-steps-premium {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .progress-steps-premium::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      z-index: 1;
+    }
+
+    .progress-step-premium {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      flex: 1;
+    }
+
+    .step-circle-premium {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+
+    .progress-step-premium.active .step-circle-premium {
+      background: linear-gradient(135deg, var(--accent) 0%, #ff4da6 100%);
+      border-color: var(--accent);
+      box-shadow: 0 0 20px rgba(255, 45, 149, 0.5);
+    }
+
+    .step-label-premium {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .progress-step-premium.active .step-label-premium {
+      color: var(--accent);
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- PREMIUM PRELOADER -->
+  <div id="preloader">
+    <div class="loader-circle"></div>
+  </div>
+
+  <div class="checkout-container">
+
+    <!-- CHECKOUT HEADER -->
+    <div class="checkout-header-premium">
+      <a href="cart.html" class="btn-premium mb-4">← Back to Cart</a>
+      <h1 class="logo-premium mb-3">Secure Checkout 🔒</h1>
+      <div class="security-badge-checkout">
+        🔐 256-bit SSL Encrypted
+      </div>
+    </div>
+
+    <!-- PROGRESS STEPS -->
+    <div class="progress-steps-premium">
+      <div class="progress-step-premium active">
+        <div class="step-circle-premium">1</div>
+        <div class="step-label-premium">Address</div>
+      </div>
+      <div class="progress-step-premium">
+        <div class="step-circle-premium">2</div>
+        <div class="step-label-premium">Payment</div>
+      </div>
+      <div class="progress-step-premium">
+        <div class="step-circle-premium">3</div>
+        <div class="step-label-premium">Confirm</div>
+      </div>
+    </div>
+
+    <div class="row g-5">
+
+      <!-- LEFT COLUMN: ADDRESS & PAYMENT -->
+      <div class="col-lg-8">
+
+        <!-- ADDRESS FORM -->
+        <div class="checkout-card-premium">
+          <h3 class="text-gradient mb-4">📦 Delivery Address</h3>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-group-premium">
+                <label class="form-label-premium">👤 Full Name</label>
+                <input type="text" id="name" class="form-control form-input-premium" placeholder="Enter your full name">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group-premium">
+                <label class="form-label-premium">📞 Phone Number</label>
+                <input type="tel" id="phone" class="form-control form-input-premium" placeholder="+91 XXXXXXXXXX">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group-premium">
+            <label class="form-label-premium">🏠 Delivery Address</label>
+            <textarea id="address" rows="3" class="form-control form-input-premium" placeholder="Enter your complete address"></textarea>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-group-premium">
+                <label class="form-label-premium">📮 PIN Code</label>
+                <input type="number" id="pincode" class="form-control form-input-premium" placeholder="6-digit PIN code">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group-premium">
+                <label class="form-label-premium">🏙️ City</label>
+                <input type="text" id="city" class="form-control form-input-premium" placeholder="Your city">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAYMENT METHODS -->
+        <div class="checkout-card-premium">
+          <h3 class="text-gradient mb-4">💳 Payment Method</h3>
+
+          <div class="payment-method-premium" onclick="selectPaymentPremium('UPI')">
+            <div class="d-flex align-items-center">
+              <div class="payment-icon">📱</div>
+              <div>
+                <h5 class="text-light mb-1">UPI Payment</h5>
+                <p class="text-secondary mb-0">Instant & Secure</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="payment-method-premium" onclick="selectPaymentPremium('CARD')">
+            <div class="d-flex align-items-center">
+              <div class="payment-icon">💳</div>
+              <div>
+                <h5 class="text-light mb-1">Credit/Debit Card</h5>
+                <p class="text-secondary mb-0">Visa, Mastercard, RuPay</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="payment-method-premium" onclick="selectPaymentPremium('COD')">
+            <div class="d-flex align-items-center">
+              <div class="payment-icon">💰</div>
+              <div>
+                <h5 class="text-light mb-1">Cash on Delivery</h5>
+                <p class="text-secondary mb-0">Pay when you receive</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: ORDER SUMMARY -->
+      <div class="col-lg-4">
+        <div class="checkout-card-premium order-summary-premium">
+          <h3 class="text-gradient mb-4">🛍️ Order Summary</h3>
+
+          <!-- ORDER ITEMS -->
+          <div id="checkoutItemsPremium" class="mb-4"></div>
+
+          <!-- PRICE BREAKDOWN -->
+          <div class="price-breakdown-premium">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-light">Subtotal:</span>
+              <span class="text-light">₹<span id="subtotalCheckout">0</span></span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-light">GST (5%):</span>
+              <span class="text-light">₹<span id="gstCheckout">0</span></span>
+            </div>
+            <div class="d-flex justify-content-between mb-3">
+              <span class="text-light">Delivery:</span>
+              <span class="text-light" id="deliveryCheckout">₹49</span>
+            </div>
+            
+            <hr class="text-light my-3">
+            
+            <div class="d-flex justify-content-between align-items-center">
+              <h4 class="text-light mb-0">Total:</h4>
+              <h3 class="text-success mb-0">₹<span id="totalCheckout">0</span></h3>
+            </div>
+          </div>
+
+          <button class="place-order-btn-premium mt-4" onclick="placeOrderPremium()">
+            🚀 Place Your Order
+          </button>
+
+          <div class="text-center mt-3">
+            <small class="text-muted">By placing order, you agree to our Terms & Conditions</small>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let selectedPayment = null;
+
+    // PRELOADER
+    window.addEventListener('load', function() {
+      setTimeout(() => {
+        document.getElementById('preloader').style.opacity = '0';
+        setTimeout(() => {
+          document.getElementById('preloader').style.display = 'none';
+        }, 500);
+      }, 800);
+      loadCheckoutSummary();
+      loadCheckoutItems();
+    });
+
+    function selectPaymentPremium(mode) {
+      selectedPayment = mode;
+      
+      // Remove selected class from all
+      document.querySelectorAll('.payment-method-premium').forEach(el => {
+        el.classList.remove('selected');
+      });
+      
+      // Add selected class to clicked
+      event.currentTarget.classList.add('selected');
+      
+      // Update progress
+      updateProgress(2);
+    }
+
+    function loadCheckoutItems() {
+      let box = document.getElementById("checkoutItemsPremium");
+      box.innerHTML = '';
+
+      cart.forEach(item => {
+        const qty = item.qty || 1;
+        const itemTotal = item.price * qty;
+
+        box.innerHTML += `
+          <div class="order-item-premium">
+            <img src="${item.img}" class="order-item-image" alt="${item.name}">
+            <div class="flex-grow-1">
+              <h6 class="text-light mb-1">${item.name}</h6>
+              <p class="text-secondary mb-0">Qty: ${qty} × ₹${item.price}</p>
+            </div>
+            <div class="text-end">
+              <h6 class="text-warning mb-0">₹${itemTotal}</h6>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function loadCheckoutSummary() {
+      let subtotal = 0;
+
+      cart.forEach(item => {
+        let qty = item.qty || 1;
+        subtotal += item.price * qty;
+      });
+
+      let gst = Math.round(subtotal * 0.05);
+      let delivery = cart.length > 0 ? 49 : 0;
+      let total = subtotal + gst + delivery;
+
+      // Free delivery for orders above 999
+      if (subtotal > 999) {
+        delivery = 0;
+        total = subtotal + gst;
+        document.getElementById('deliveryCheckout').innerHTML = '<span class="text-success">FREE</span>';
+      }
+
+      document.getElementById("subtotalCheckout").textContent = subtotal;
+      document.getElementById("gstCheckout").textContent = gst;
+      document.getElementById("totalCheckout").textContent = total;
+    }
+
+    function updateProgress(step) {
+      document.querySelectorAll('.progress-step-premium').forEach((el, index) => {
+        if (index < step) {
+          el.classList.add('active');
+        } else {
+          el.classList.remove('active');
+        }
+      });
+    }
+
+    function placeOrderPremium() {
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const pincode = document.getElementById('pincode').value.trim();
+      const city = document.getElementById('city').value.trim();
+
+      // Validation
+      if (!name || !phone || !address || !pincode || !city) {
+        showCheckoutNotification("Please fill all address fields!", "error");
+        return;
+      }
+
+      if (phone.length !== 10 || isNaN(phone)) {
+        showCheckoutNotification("Please enter a valid 10-digit phone number", "error");
+        return;
+      }
+
+      if (pincode.length !== 6 || isNaN(pincode)) {
+        showCheckoutNotification("Please enter a valid 6-digit PIN code", "error");
+        return;
+      }
+
+      if (!selectedPayment) {
+        showCheckoutNotification("Please select a payment method", "error");
+        return;
+      }
+
+      // Create order object
+      const order = {
+        id: 'ORD' + Date.now(),
+        name: name,
+        phone: phone,
+        address: address,
+        pincode: pincode,
+        city: city,
+        payment: selectedPayment,
+        items: cart,
+        total: document.getElementById("totalCheckout").textContent,
+        status: 'confirmed',
+        time: new Date().toLocaleString(),
+        estimatedDelivery: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString()
+      };
+
+      // Save order
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      orders.push(order);
+      localStorage.setItem('orders', JSON.stringify(orders));
+      localStorage.setItem('lastOrder', JSON.stringify(order));
+
+      // Clear cart
+      localStorage.removeItem('cart');
+
+      // Show success animation
+      const btn = document.querySelector('.place-order-btn-premium');
+      btn.innerHTML = '✅ Order Placed!';
+      btn.style.background = 'linear-gradient(135deg, var(--success) 0%, #00cc66 100%)';
+      
+      // Redirect to success page
+      setTimeout(() => {
+        window.location.href = "success.html";
+      }, 1500);
+    }
+
+    function showCheckoutNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'} position-fixed`;
+      notification.style.cssText = `
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 350px;
+        animation: slideInRight 0.3s ease-out;
+      `;
+      notification.innerHTML = `
+        <div class="d-flex align-items-center">
+          <span class="me-2">${type === 'success' ? '✅' : '❌'}</span>
+          <span>${message}</span>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease-in';
+        setTimeout(() => {
+          notification.remove();
+        }, 300);
+      }, 4000);
+    }
+
+    // Add CSS animations
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideInRight {
+        0% { transform: translateX(100%); opacity: 0; }
+        100% { transform: translateX(0); opacity: 1; }
+      }
+      
+      @keyframes slideOutRight {
+        0% { transform: translateX(0); opacity: 1; }
+        100% { transform: translateX(100%); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+
+</body>
+</html>

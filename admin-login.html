@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Login ⚡ VIZARD SECURE</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Premium Theme -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <style>
+    body {
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0a0014 0%, #1a0030 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-container {
+      position: relative;
+      z-index: 2;
+    }
+
+    .secure-login-box {
+      width: 380px;
+      padding: 40px 30px;
+      border-radius: 24px;
+      backdrop-filter: blur(25px);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.5),
+        0 0 100px rgba(255, 45, 149, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      animation: slideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .security-badge {
+      position: absolute;
+      top: -10px;
+      right: 20px;
+      background: var(--success);
+      color: black;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      animation: pulse 2s infinite;
+    }
+
+    .input-group-security {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .security-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: white;
+      padding: 15px 20px;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .security-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255, 45, 149, 0.2),
+                  0 0 30px rgba(255, 45, 149, 0.3);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-secure-login {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent) 0%, #ff4da6 100%);
+      border: none;
+      padding: 15px;
+      font-weight: 600;
+      border-radius: 12px;
+      color: white;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-secure-login::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-secure-login:hover::before {
+      left: 100%;
+    }
+
+    .btn-secure-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(255, 45, 149, 0.5);
+    }
+
+    .attempts-warning {
+      color: var(--warning);
+      font-size: 12px;
+      text-align: center;
+      margin-top: 10px;
+      display: none;
+    }
+
+    /* Background Animation */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .floating-shape {
+      position: absolute;
+      background: rgba(255, 45, 149, 0.1);
+      border-radius: 50%;
+      animation: floatRandom 20s infinite linear;
+    }
+
+    @keyframes floatRandom {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(100px, 100px) rotate(90deg); }
+      50% { transform: translate(50px, 200px) rotate(180deg); }
+      75% { transform: translate(-100px, 100px) rotate(270deg); }
+      100% { transform: translate(0, 0) rotate(360deg); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Background Animation -->
+  <div class="bg-animation">
+    <div class="floating-shape" style="width: 200px; height: 200px; top: 10%; left: 10%; animation-delay: 0s;"></div>
+    <div class="floating-shape" style="width: 150px; height: 150px; top: 60%; left: 80%; animation-delay: -5s;"></div>
+    <div class="floating-shape" style="width: 100px; height: 100px; top: 80%; left: 20%; animation-delay: -10s;"></div>
+  </div>
+
+  <div class="login-container">
+    <div class="secure-login-box position-relative">
+      <div class="security-badge">🔒 SECURE</div>
+
+      <h2 class="text-gradient text-center mb-4">Admin Portal</h2>
+      <p class="text-center text-secondary mb-4">Secure access required</p>
+
+      <div class="input-group-security">
+        <input id="adminUser" type="text" class="security-input" placeholder="Admin Username" autocomplete="off">
+      </div>
+
+      <div class="input-group-security">
+        <input id="adminPass" type="password" class="security-input" placeholder="••••••••" autocomplete="off">
+      </div>
+
+      <button onclick="secureLogin()" class="btn-secure-login mb-3">
+        🔐 Authenticate
+      </button>
+
+      <p id="errorMsg" class="text-danger text-center mt-2"></p>
+      <p id="attemptsWarning" class="attempts-warning"></p>
+
+      <div class="text-center mt-3">
+        <small class="text-muted">Failed attempts: <span id="attemptCount">0</span>/5</small>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let loginAttempts = parseInt(localStorage.getItem('adminLoginAttempts')) || 0;
+    const maxAttempts = 5;
+    const lockoutTime = 15 * 60 * 1000; // 15 minutes
+
+    document.getElementById('attemptCount').textContent = loginAttempts;
+
+    // Check if user is locked out
+    const lastAttempt = localStorage.getItem('lastLoginAttempt');
+    if (lastAttempt && (Date.now() - parseInt(lastAttempt)) < lockoutTime && loginAttempts >= maxAttempts) {
+      showLockoutMessage();
+    }
+
+    function showLockoutMessage() {
+      const remainingTime = lockoutTime - (Date.now() - parseInt(localStorage.getItem('lastLoginAttempt')));
+      const minutes = Math.ceil(remainingTime / (60 * 1000));
+      
+      document.getElementById('errorMsg').textContent = `Account temporarily locked. Try again in ${minutes} minutes.`;
+      document.getElementById('errorMsg').className = 'text-warning text-center mt-2';
+      document.querySelector('.btn-secure-login').disabled = true;
+    }
+
+    function secureLogin() {
+      const username = document.getElementById('adminUser').value;
+      const password = document.getElementById('adminPass').value;
+
+      // Check if locked out
+      if (loginAttempts >= maxAttempts) {
+        const lastAttempt = localStorage.getItem('lastLoginAttempt');
+        if (Date.now() - parseInt(lastAttempt) < lockoutTime) {
+          showLockoutMessage();
+          return;
+        } else {
+          // Reset attempts after lockout period
+          loginAttempts = 0;
+          localStorage.setItem('adminLoginAttempts', loginAttempts);
+        }
+      }
+
+      // Enhanced credential check (in real app, this would be server-side)
+      const hashedInput = btoa(password + 'VIZARD_SALT_2024'); // Basic obfuscation
+      const storedHash = 'YWRtaW4xMjM0VklaQVJEX1NBTFRfMjAyNA=='; // admin1234 + salt
+
+      if (username === 'admin' && btoa(password + 'VIZARD_SALT_2024') === storedHash) {
+        // Successful login
+        loginAttempts = 0;
+        localStorage.setItem('adminLoginAttempts', loginAttempts);
+        localStorage.setItem('adminLogged', 'true');
+        localStorage.setItem('adminSessionStart', Date.now().toString());
+        
+        // Redirect to admin panel
+        window.location.href = 'admin.html';
+      } else {
+        // Failed login
+        loginAttempts++;
+        localStorage.setItem('adminLoginAttempts', loginAttempts);
+        localStorage.setItem('lastLoginAttempt', Date.now().toString());
+
+        document.getElementById('attemptCount').textContent = loginAttempts;
+        document.getElementById('errorMsg').textContent = 'Invalid credentials! Attempt ' + loginAttempts + '/' + maxAttempts;
+
+        if (loginAttempts >= maxAttempts) {
+          showLockoutMessage();
+        }
+      }
+    }
+
+    // Auto-logout after 2 hours
+    function checkSession() {
+      const sessionStart = localStorage.getItem('adminSessionStart');
+      if (sessionStart && (Date.now() - parseInt(sessionStart)) > (2 * 60 * 60 * 1000)) {
+        localStorage.removeItem('adminLogged');
+        localStorage.removeItem('adminSessionStart');
+        window.location.href = 'admin-login.html';
+      }
+    }
+
+    // Run session check every minute
+    setInterval(checkSession, 60000);
+  </script>
+
+</body>
+</html>
